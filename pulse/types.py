@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from dataclass_wizard import JSONWizard
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
@@ -11,7 +11,7 @@ class APIErrorData(JSONWizard):
 
 @dataclass
 class APIResponse(JSONWizard):
-    errors: List[APIErrorData]
+    errors: Optional[List[APIErrorData]]
 
 
 @dataclass
@@ -23,4 +23,4 @@ class ClassifyPayload(JSONWizard):
 
 @dataclass
 class ClassifyResponse(APIResponse):
-    is_bot: bool
+    is_bot: Optional[bool] = None

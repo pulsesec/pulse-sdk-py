@@ -24,7 +24,7 @@ class PulseAPI:
                 "content-type": "application/json",
             },
             raise_for_status=False,
-            base_url="https://api.pulsesecurity.org/api",
+            base_url="https://api.pulsesecurity.org",
         )
 
     async def close(self):
@@ -35,7 +35,7 @@ class PulseAPI:
             token=token, site_key=self.site_key, secret_key=self.secret_key
         )
 
-        async with self.http.post("/classify", json=payload) as resp:
+        async with self.http.post("/api/classify", json=payload) as resp:
             data = await resp.json()
             response = ClassifyResponse.from_dict(data)
 
@@ -43,5 +43,8 @@ class PulseAPI:
                 error = response.errors[0]
                 cls = error_map.get(error.code, APIError)
                 raise cls(error)
+
+            if response.is_bot is None:
+                raise ValueError("is_bot is not present in response")
 
             return response.is_bot
