@@ -58,11 +58,16 @@ async def test_error_token_not_found(mocker):
 
     client = pulse.PulseAPI(test_site_key, test_secret_key)
 
+    caught = False
+
     try:
         await client.classify(test_token)
         assert False
     except pulse.TokenNotFoundError as e:
         assert e.code == error.code
+        caught = True
+
+    assert caught
 
     await client.close()
 
@@ -75,10 +80,14 @@ async def test_error_token_used(mocker):
 
     client = pulse.PulseAPI(test_site_key, test_secret_key)
 
+    caught = False
     try:
         await client.classify(test_token)
         assert False
     except pulse.TokenUsedError as e:
+        caught = True
         assert e.code == error.code
+
+    assert caught
 
     await client.close()
