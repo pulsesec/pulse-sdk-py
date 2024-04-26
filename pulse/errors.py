@@ -18,7 +18,12 @@ class TokenUsedError(APIError):
     pass
 
 
+class TokenExpiredError(APIError):
+    pass
+
+
 error_map: Dict[str, Type[APIError]] = {
     "TOKEN_NOT_FOUND": TokenNotFoundError,
     "TOKEN_USED": TokenUsedError,
+    "TOKEN_EXPIRED": TokenExpiredError,
 }

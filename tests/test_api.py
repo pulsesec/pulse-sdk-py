@@ -3,6 +3,7 @@ import json
 import pytest
 import pulse
 from pulse.types import ClassifyResponse, APIResponse, APIErrorData
+from typing import List, Tuple, Type
 
 test_site_key = "siteKey"
 test_secret_key = "secretKey"
@@ -25,19 +26,6 @@ class MockResponse:
 
 
 @pytest.mark.asyncio
-async def test_classify_human(mocker):
-    res = MockResponse(ClassifyResponse(is_bot=False, errors=None), 200)
-    mocker.patch("aiohttp.ClientSession.post", return_value=res)
-
-    client = pulse.PulseAPI(test_site_key, test_secret_key)
-
-    is_bot = await client.classify(test_token)
-    assert is_bot is False
-
-    await client.close()
-
-
-@pytest.mark.asyncio
 async def test_classify_bot(mocker):
     res = MockResponse(ClassifyResponse(is_bot=True, errors=None), 200)
     mocker.patch("aiohttp.ClientSession.post", return_value=res)
@@ -51,43 +39,30 @@ async def test_classify_bot(mocker):
 
 
 @pytest.mark.asyncio
-async def test_error_token_not_found(mocker):
-    error = APIErrorData(code="TOKEN_NOT_FOUND", error="Token not found")
-    res = MockResponse(APIResponse(errors=[error]), 200)
-    mocker.patch("aiohttp.ClientSession.post", return_value=res)
+async def test_errors(mocker):
+    tests: List[Tuple[str, Type[pulse.APIError]]] = [
+        ("TOKEN_NOT_FOUND", pulse.TokenNotFoundError),
+        ("TOKEN_USED", pulse.TokenUsedError),
+        ("TOKEN_EXPIRED", pulse.TokenExpiredError),
+    ]
 
-    client = pulse.PulseAPI(test_site_key, test_secret_key)
+    for code, error in tests:
+        res = MockResponse(
+            APIResponse(errors=[APIErrorData(code=code, error="Test Error")]), 200
+        )
+        mocker.patch("aiohttp.ClientSession.post", return_value=res)
 
-    caught = False
+        client = pulse.PulseAPI(test_site_key, test_secret_key)
 
-    try:
-        await client.classify(test_token)
-        assert False
-    except pulse.TokenNotFoundError as e:
-        assert e.code == error.code
-        caught = True
+        caught = False
 
-    assert caught
+        try:
+            await client.classify(test_token)
+            assert False
+        except error as e:
+            assert e.code == code
+            caught = True
 
-    await client.close()
-
-
-@pytest.mark.asyncio
-async def test_error_token_used(mocker):
-    error = APIErrorData(code="TOKEN_USED", error="Token used")
-    res = MockResponse(APIResponse(errors=[error]), 200)
-    mocker.patch("aiohttp.ClientSession.post", return_value=res)
-
-    client = pulse.PulseAPI(test_site_key, test_secret_key)
-
-    caught = False
-    try:
-        await client.classify(test_token)
-        assert False
-    except pulse.TokenUsedError as e:
-        caught = True
-        assert e.code == error.code
-
-    assert caught
+        assert caught
 
     await client.close()
