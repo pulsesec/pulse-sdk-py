@@ -9,7 +9,7 @@ $ pip install pulsesecurity
 ## Example
 
 ```py
-from pulse import PulseAPI, TokenNotFoundError, TokenUsedError
+from pulse import PulseAPI, TokenNotFoundError, TokenUsedError, TokenExpiredError
 import os
 
 
@@ -21,10 +21,11 @@ async def main():
             is_bot = await client.classify(token)
             return is_bot
         except TokenNotFoundError:
-            print("Token not found")
+            raise "Token not found"
         except TokenUsedError:
-            print("Token used")
+            raise "Token already used"
+        except TokenExpiredError:
+            raise "Token expired"
         except Exception as e:
-            print(f"An error occurred: {e}")
-
+            raise e
 ```
