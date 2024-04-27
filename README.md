@@ -9,12 +9,12 @@ $ pip install pulsesec
 ## Example
 
 ```py
-from pulse import PulseAPI, TokenNotFoundError, TokenUsedError, TokenExpiredError
+from pulse import Pulse, TokenNotFoundError, TokenUsedError, TokenExpiredError
 import os
 
 
 async def main():
-    client = PulseAPI(os.getenv("PULSE_SITE_KEY"), os.getenv("PULSE_SECRET_KEY"))
+    client = Pulse(os.getenv("PULSE_SITE_KEY"), os.getenv("PULSE_SECRET_KEY"))
 
     async def classify(token: str) -> bool:
         try:

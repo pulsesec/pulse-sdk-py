@@ -2,7 +2,7 @@ from .types import APIErrorData
 from typing import Dict, Type
 
 
-class APIError(Exception):
+class PulseError(Exception):
     code: str
 
     def __init__(self, data: APIErrorData):
@@ -10,19 +10,19 @@ class APIError(Exception):
         self.code = data.code
 
 
-class TokenNotFoundError(APIError):
+class TokenNotFoundError(PulseError):
     pass
 
 
-class TokenUsedError(APIError):
+class TokenUsedError(PulseError):
     pass
 
 
-class TokenExpiredError(APIError):
+class TokenExpiredError(PulseError):
     pass
 
 
-error_map: Dict[str, Type[APIError]] = {
+error_map: Dict[str, Type[PulseError]] = {
     "TOKEN_NOT_FOUND": TokenNotFoundError,
     "TOKEN_USED": TokenUsedError,
     "TOKEN_EXPIRED": TokenExpiredError,

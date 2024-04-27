@@ -1,11 +1,11 @@
 import aiohttp
 from packaging.version import Version
 import asyncio
-from .errors import error_map, APIError
+from .errors import error_map, PulseError
 from .types import ClassifyPayload, ClassifyResponse
 
 
-class PulseAPI:
+class Pulse:
     http: aiohttp.ClientSession
     site_key: str
     secret_key: str
@@ -41,7 +41,7 @@ class PulseAPI:
 
             if response.errors:
                 error = response.errors[0]
-                cls = error_map.get(error.code, APIError)
+                cls = error_map.get(error.code, PulseError)
                 raise cls(error)
 
             if response.is_bot is None:

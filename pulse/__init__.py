@@ -1,2 +1,2 @@
-from .pulse import PulseAPI
-from .errors import APIError, TokenNotFoundError, TokenUsedError, TokenExpiredError
+from .pulse import Pulse
+from .errors import PulseError, TokenNotFoundError, TokenUsedError, TokenExpiredError
