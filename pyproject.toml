@@ -1,6 +1,6 @@
 [project]
 name = "pulsesec"
-version = "0.0.1"
+version = "0.0.3"
 authors = [{ name = "Pulse Security", email = "contact@pulsesecurity.org" }]
 description = "Pulse Security - Python SDK"
 readme = "README.md"
