@@ -3,7 +3,7 @@
 ## Installation
 
 ```sh
-$ pip install pulsesecurity
+$ pip install pulsesec
 ```
 
 ## Example
