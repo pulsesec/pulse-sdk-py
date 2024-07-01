@@ -1,4 +1,8 @@
-# Pulse Security - Python SDK
+<h1 align="center"><a href="https://www.pulsesecurity.org/">Pulse Security</a></h1>
+<p align="center">
+<img src="https://avatars.githubusercontent.com/u/161549711?s=200&v=4"/>
+</p>
+<h1 align="center">Python SDK</h1>
 
 ## Installation
 
